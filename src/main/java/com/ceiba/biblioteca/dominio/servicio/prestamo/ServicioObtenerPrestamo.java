@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServicioObtenerPrestamo {
+
     private final RepositorioPrestamo repositorioPrestamo;
 
     public ServicioObtenerPrestamo(RepositorioPrestamo repositorioPrestamo) {

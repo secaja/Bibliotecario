@@ -1,5 +1,7 @@
 package com.ceiba.biblioteca.dominio.servicio.bibliotecario;
 
+import com.ceiba.biblioteca.dominio.Libro;
+import com.ceiba.biblioteca.dominio.Prestamo;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioLibro;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioPrestamo;
 
@@ -16,10 +18,24 @@ public class ServicioBibliotecario {
     }
 
     public void prestar(String isbn, String nombreUsuario) {
-        throw new UnsupportedOperationException("Método pendiente por implementar");
+        Libro libro = this.repositorioLibro.obtenerPorIsbn(isbn);
+        if(libro != null) {
+            if(!esPrestado(isbn)){
+                Prestamo prestamo = new Prestamo(libro, nombreUsuario);
+                this.repositorioPrestamo.agregar(prestamo);
+            } else {
+                //excepcion
+            }
+        } else {
+
+        }
     }
 
     public boolean esPrestado(String isbn) {
+        Libro libro = this.repositorioPrestamo.obtenerLibroPrestadoPorIsbn(isbn);
+        if(esPrestado(isbn)){
+            Prestamo prestamo = Prestamo()
+        }
         return false;
     }
 }
