@@ -24,4 +24,8 @@ public class Libro {
         return isbn;
     }
 
+    public boolean esPalindromo(){
+        StringBuilder isbnInvertido = new StringBuilder(this.isbn);
+        return this.isbn.equalsIgnoreCase(isbnInvertido.reverse().toString());
+    }
 }

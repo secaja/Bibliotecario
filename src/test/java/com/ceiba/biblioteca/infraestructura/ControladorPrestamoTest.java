@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 public class ControladorPrestamoTest {
-    public static final String ESTE_PRODUCTO_NO_CUENTA_CON_GARANTIA = "Este producto no cuenta con garantía extendida";
+
     public static final String ISBN_LIBRO_PD5121 = "PD5121";
     public static final String NOMBRE_CLIENTE_PEDRO = "PEDRO";
 
@@ -31,9 +31,19 @@ public class ControladorPrestamoTest {
 
     @Test
     public void generarPrestamoLibro() throws Exception {
-        ComandoLibro comandoLibro = new LibroTestDataBuilder().buildComando();
+        ComandoLibro comandoLibro = new LibroTestDataBuilder()
+                .conisbn(ISBN_LIBRO_PD5121)
+                .buildComando();
+
         mvc.perform(MockMvcRequestBuilders
-                .post("/prestamos/{isbn}/{nombreCliente}",ESTE_PRODUCTO_NO_CUENTA_CON_GARANTIA, ISBN_LIBRO_PD5121, NOMBRE_CLIENTE_PEDRO)
+                .post("/libros")
+                .content(objectMapper.writeValueAsString(comandoLibro))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/prestamos/{isbn}/{nombreCliente}", ISBN_LIBRO_PD5121, NOMBRE_CLIENTE_PEDRO)
                 .content(objectMapper.writeValueAsString(comandoLibro))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
