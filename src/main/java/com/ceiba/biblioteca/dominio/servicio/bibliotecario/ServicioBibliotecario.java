@@ -22,15 +22,15 @@ public class ServicioBibliotecario {
         this.repositorioPrestamo = repositorioPrestamo;
     }
 
-    public void prestar(String isbn, String nombreUsuario, Date fechaSolicitud) {
+    public void prestar(String isbn, String nombreUsuario) {
         Libro libro = consultarLibro(isbn);
         validarIsbnPalindromo(libro);
-        prestarLibro(libro, nombreUsuario, fechaSolicitud);
+        prestarLibro(libro, nombreUsuario);
     }
 
-    private void prestarLibro(Libro libro, String nombreUsuario, Date fechaSolicitud){
+    private void prestarLibro(Libro libro, String nombreUsuario){
         if(!esPrestado(libro.getIsbn())){
-            Prestamo prestamo = new Prestamo(libro, nombreUsuario, fechaSolicitud);
+            Prestamo prestamo = new Prestamo(libro, nombreUsuario);
             this.repositorioPrestamo.agregar(prestamo);
         } else {
             throw new PrestamoException(EL_LIBRO_NO_SE_ENCUENTRA_DISPONIBLE);

@@ -17,6 +17,6 @@ public class ManejadorGenerarPrestamo {
 
     @Transactional
     public void ejecutar(String isbn, String nombreCliente) {
-        this.servicioBibliotecario.prestar( isbn, nombreCliente, new Date());
+        this.servicioBibliotecario.prestar( isbn, nombreCliente);
     }
 }

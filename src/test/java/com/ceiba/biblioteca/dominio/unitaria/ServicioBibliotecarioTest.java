@@ -33,7 +33,7 @@ public class ServicioBibliotecarioTest {
 
         //act
         try {
-            servicioBibliotecario.prestar(isbn, nombreUsuario, new Date());
+            servicioBibliotecario.prestar(isbn, nombreUsuario);
             fail();
         } catch (PrestamoException exception){
             //assert
@@ -55,7 +55,7 @@ public class ServicioBibliotecarioTest {
 
         //act
         try {
-            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario, new Date());
+            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario);
             fail();
         }catch (PrestamoException exception){
             //assert
@@ -78,7 +78,7 @@ public class ServicioBibliotecarioTest {
         ServicioBibliotecario servicioBibliotecario = new ServicioBibliotecario(repositorioLibro, repositorioPrestamo);
         //act
         try {
-            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario, new Date());
+            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario);
             fail();
         }catch (PrestamoException exception){
             //assert
@@ -104,7 +104,7 @@ public class ServicioBibliotecarioTest {
         ServicioBibliotecario servicioBibliotecario = new ServicioBibliotecario(repositorioLibro, repositorioPrestamo);
 
         // act
-        servicioBibliotecario.prestar(libro.getIsbn(),nombreUsuario, new Date());
+        servicioBibliotecario.prestar(libro.getIsbn(),nombreUsuario);
 
         //assert
         verify(repositorioLibro).obtenerPorIsbn(libro.getIsbn());

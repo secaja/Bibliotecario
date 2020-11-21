@@ -14,8 +14,8 @@ public class Prestamo {
     private Date fechaEntregaMaxima;
     private String nombreUsuario;
 
-    public Prestamo(Libro libro, String nombreUsuario, Date fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
+    public Prestamo(Libro libro, String nombreUsuario) {
+        this.fechaSolicitud = new Date();
         this.libro = libro;
         this.nombreUsuario = nombreUsuario;
         calcularFechaDeEntrega();
