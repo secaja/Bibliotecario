@@ -6,6 +6,8 @@ import com.ceiba.biblioteca.dominio.excepcion.PrestamoException;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioLibro;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioPrestamo;
 
+import java.util.Date;
+
 public class ServicioBibliotecario {
 
     public static final String EL_LIBRO_NO_SE_ENCUENTRA_DISPONIBLE = "El libro no se encuentra disponible";
@@ -20,15 +22,15 @@ public class ServicioBibliotecario {
         this.repositorioPrestamo = repositorioPrestamo;
     }
 
-    public void prestar(String isbn, String nombreUsuario) {
+    public void prestar(String isbn, String nombreUsuario, Date fechaSolicitud) {
         Libro libro = consultarLibro(isbn);
         validarIsbnPalindromo(libro);
-        prestarLibro(libro, nombreUsuario);
+        prestarLibro(libro, nombreUsuario, fechaSolicitud);
     }
 
-    private void prestarLibro(Libro libro, String nombreUsuario){
+    private void prestarLibro(Libro libro, String nombreUsuario, Date fechaSolicitud){
         if(!esPrestado(libro.getIsbn())){
-            Prestamo prestamo = new Prestamo(libro, nombreUsuario);
+            Prestamo prestamo = new Prestamo(libro, nombreUsuario, fechaSolicitud);
             this.repositorioPrestamo.agregar(prestamo);
         } else {
             throw new PrestamoException(EL_LIBRO_NO_SE_ENCUENTRA_DISPONIBLE);

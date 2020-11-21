@@ -12,7 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -22,6 +24,8 @@ public class ControladorPrestamoTest {
 
     public static final String ISBN_LIBRO_PD5121 = "PD5121";
     public static final String NOMBRE_CLIENTE_PEDRO = "PEDRO";
+    public static final String ISBN_LIBRO_PD9998 = "PD9998";
+    public static final String ISBN_LIBRO_PD9912 = "PD9912";
 
     @Autowired
     private MockMvc mvc;
@@ -43,11 +47,66 @@ public class ControladorPrestamoTest {
                 .andExpect(status().isOk());
 
         mvc.perform(MockMvcRequestBuilders
-                .post("/prestamos/{isbn}/{nombreCliente}", ISBN_LIBRO_PD5121, NOMBRE_CLIENTE_PEDRO)
+                .post("/prestamos/{isbn}/{nombreCliente}", comandoLibro.getIsbn(), NOMBRE_CLIENTE_PEDRO)
+                .content(objectMapper.writeValueAsString(comandoLibro))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void generarPrestamoLibroConFechaDeEntrega() throws Exception{
+        ComandoLibro comandoLibro = new LibroTestDataBuilder()
+                .conisbn(ISBN_LIBRO_PD9998)
+                .buildComando();
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/libros")
                 .content(objectMapper.writeValueAsString(comandoLibro))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+        mvc.perform(MockMvcRequestBuilders
+                .post("/prestamos/{isbn}/{nombreCliente}", comandoLibro.getIsbn(), NOMBRE_CLIENTE_PEDRO)
+                .content(objectMapper.writeValueAsString(comandoLibro))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/prestamos/{isbn}", comandoLibro.getIsbn())
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fechaEntregaMaxima").exists());
+    }
+
+    @Test
+    public void generarPrestamoLibroConUsuario() throws Exception{
+        ComandoLibro comandoLibro = new LibroTestDataBuilder()
+                .conisbn(ISBN_LIBRO_PD9912)
+                .buildComando();
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/libros")
+                .content(objectMapper.writeValueAsString(comandoLibro))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/prestamos/{isbn}/{nombreCliente}", comandoLibro.getIsbn(), NOMBRE_CLIENTE_PEDRO)
+                .content(objectMapper.writeValueAsString(comandoLibro))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/prestamos/{isbn}", comandoLibro.getIsbn())
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nombreUsuario").value(NOMBRE_CLIENTE_PEDRO));
     }
 }

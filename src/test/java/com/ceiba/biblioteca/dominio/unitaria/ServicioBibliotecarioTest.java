@@ -3,6 +3,7 @@ package com.ceiba.biblioteca.dominio.unitaria;
 
 
 import com.ceiba.biblioteca.dominio.Libro;
+import com.ceiba.biblioteca.dominio.Prestamo;
 import com.ceiba.biblioteca.dominio.excepcion.PrestamoException;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioLibro;
 import com.ceiba.biblioteca.dominio.repositorio.RepositorioPrestamo;
@@ -11,9 +12,10 @@ import com.ceiba.biblioteca.testdatabuilder.LibroTestDataBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ServicioBibliotecarioTest {
 
@@ -31,7 +33,7 @@ public class ServicioBibliotecarioTest {
 
         //act
         try {
-            servicioBibliotecario.prestar(isbn, nombreUsuario);
+            servicioBibliotecario.prestar(isbn, nombreUsuario, new Date());
             fail();
         } catch (PrestamoException exception){
             //assert
@@ -53,7 +55,7 @@ public class ServicioBibliotecarioTest {
 
         //act
         try {
-            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario);
+            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario, new Date());
             fail();
         }catch (PrestamoException exception){
             //assert
@@ -76,7 +78,7 @@ public class ServicioBibliotecarioTest {
         ServicioBibliotecario servicioBibliotecario = new ServicioBibliotecario(repositorioLibro, repositorioPrestamo);
         //act
         try {
-            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario);
+            servicioBibliotecario.prestar(libro.getIsbn(), nombreUsuario, new Date());
             fail();
         }catch (PrestamoException exception){
             //assert
@@ -89,22 +91,26 @@ public class ServicioBibliotecarioTest {
         //arrange
 
         String nombreUsuario = "sebas";
-        Libro libro = new Libro("4789","qert",2005);
+        Libro libro = new Libro("1478" , "sedrt" , 1998);
+        Prestamo prestamo= new Prestamo(new Date(),libro,null,nombreUsuario);
 
-
-        RepositorioPrestamo repositorioPrestamo = mock(RepositorioPrestamo.class);
         RepositorioLibro repositorioLibro = mock(RepositorioLibro.class);
+        RepositorioPrestamo repositorioPrestamo = mock(RepositorioPrestamo.class);
 
-        when(repositorioPrestamo.obtenerLibroPrestadoPorIsbn(libro.getIsbn())).thenReturn(null);
         when(repositorioLibro.obtenerPorIsbn(libro.getIsbn())).thenReturn(libro);
+        when(repositorioPrestamo.obtenerLibroPrestadoPorIsbn(libro.getIsbn())).thenReturn(null);
+        doNothing().when(repositorioPrestamo).agregar(prestamo);
 
         ServicioBibliotecario servicioBibliotecario = new ServicioBibliotecario(repositorioLibro, repositorioPrestamo);
 
-        //act
+        // act
+        servicioBibliotecario.prestar(libro.getIsbn(),nombreUsuario, new Date());
 
-
-
-        }
+        //assert
+        verify(repositorioLibro).obtenerPorIsbn(libro.getIsbn());
+        verify(repositorioPrestamo).obtenerLibroPrestadoPorIsbn(libro.getIsbn());
+        verify(repositorioPrestamo).agregar(any());
+    }
 
 
 

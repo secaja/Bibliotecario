@@ -64,6 +64,8 @@ public class RepositorioPrestamoPersistente implements RepositorioPrestamo {
         PrestamoEntity prestamoEntity = new PrestamoEntity();
         prestamoEntity.setLibro(libroEntity);
         prestamoEntity.setFechaSolicitud(prestamo.getFechaSolicitud());
+        prestamoEntity.setFechaEntregaMaxima(prestamo.getFechaEntregaMaxima());
+        prestamoEntity.setNombreUsuario(prestamo.getNombreUsuario());
 
         return prestamoEntity;
     }
